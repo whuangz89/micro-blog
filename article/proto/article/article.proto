@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+service ArticleService {
+    rpc FetchArticles(ListArticleRequest) returns (Result);
+    rpc CreateArticle(CreateRequest) returns (Result);
+}
+
+message CreateRequest {
+    Article article = 1;
+}
+message ListArticleRequest {}
+message DetailRequest {
+    int64 id = 1;
+    string slug = 2;
+}
+
+message Article {
+    int64 id = 1;
+    string title = 2;
+    string content = 3;
+    Author author = 4;
+    string created_at = 5; //unix dt
+    string updated_at = 6;
+}
+
+message Author {
+    int64 id = 1;
+}
+
+message Result {
+    int32 status_code = 1;
+    string message = 2;
+
+    Article article = 3;
+    repeated Article articles = 4;
+}
