@@ -25,3 +25,11 @@ func (a *articleUsecase) FetchArticles(ctx context.Context, req *pb.ListArticleR
 
 	return listArticle, nil
 }
+
+func (a *articleUsecase) CreateArticle(ctx context.Context, req *pb.CreateArticleRequest) (int32, error) {
+	err := a.articleRepo.CreateArticle(ctx, req)
+	if err != nil {
+		return 400, err
+	}
+	return 200, nil
+}

@@ -9,15 +9,15 @@ import (
 	pb "github.com/whuangz/micro-blog/article/proto/article"
 )
 
-type articleRepositroy struct {
+type articleRepository struct {
 	Conn *sql.DB
 }
 
 func NewMysqlArticleRepository(Conn *sql.DB) article.Repository {
-	return &articleRepositroy{Conn}
+	return &articleRepository{Conn}
 }
 
-func (m *articleRepositroy) fetch(ctx context.Context, query string, args ...interface{}) ([]*pb.Article, error) {
+func (m *articleRepository) fetch(ctx context.Context, query string, args ...interface{}) ([]*pb.Article, error) {
 	rows, err := m.Conn.QueryContext(ctx, query, args...)
 	if err != nil {
 		logrus.Error(err)
@@ -57,7 +57,7 @@ func (m *articleRepositroy) fetch(ctx context.Context, query string, args ...int
 	return result, nil
 }
 
-func (m *articleRepositroy) FetchArticles(ctx context.Context, req *pb.ListArticleRequest) ([]*pb.Article, error) {
+func (m *articleRepository) FetchArticles(ctx context.Context, req *pb.ListArticleRequest) ([]*pb.Article, error) {
 	query := `SELECT id,title,content, author_id, updated_at, created_at
   						FROM article`
 
@@ -67,4 +67,19 @@ func (m *articleRepositroy) FetchArticles(ctx context.Context, req *pb.ListArtic
 	}
 
 	return res, nil
+}
+
+func (m *articleRepository) CreateArticle(ctx context.Context, req *pb.CreateArticleRequest) error {
+	query := `INSERT INTO article(title, content, author_id, updated_at, created_at) VALUES(?,?,?,NOW(),NOW())`
+	stmt, err := m.Conn.PrepareContext(ctx, query)
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.ExecContext(ctx, req.Title, req.Content, req.AuthorId)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

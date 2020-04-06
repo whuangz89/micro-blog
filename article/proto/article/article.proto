@@ -2,11 +2,13 @@ syntax = "proto3";
 
 service ArticleService {
     rpc FetchArticles(ListArticleRequest) returns (Result);
-    rpc CreateArticle(CreateRequest) returns (Result);
+    rpc CreateArticle(CreateArticleRequest) returns (Result);
 }
 
-message CreateRequest {
-    Article article = 1;
+message CreateArticleRequest {
+    string title = 1;
+    string content = 2;
+    int64 author_id = 3;
 }
 message ListArticleRequest {}
 message DetailRequest {
@@ -19,7 +21,7 @@ message Article {
     string title = 2;
     string content = 3;
     Author author = 4;
-    string created_at = 5; //unix dt
+    string created_at = 5;
     string updated_at = 6;
 }
 

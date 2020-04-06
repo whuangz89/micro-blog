@@ -29,7 +29,7 @@ func init() {
 
 func main() {
 	srv := micro.NewService(
-		micro.Name("blog.article.service"),
+		micro.Name("blog.service.article"),
 	)
 	srv.Init()
 

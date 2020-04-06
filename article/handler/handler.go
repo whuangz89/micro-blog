@@ -33,3 +33,13 @@ func (h *handler) FetchArticles(ctx context.Context, req *pb.ListArticleRequest,
 	res.Articles = articles
 	return nil
 }
+
+func (h *handler) CreateArticle(ctx context.Context, req *pb.CreateArticleRequest, res *pb.Result) error {
+	status, err := h.usecase.CreateArticle(ctx, req)
+	if err != nil {
+		return err
+	}
+	res.StatusCode = status
+	res.Message = "Success Inserted Article"
+	return nil
+}

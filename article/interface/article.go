@@ -8,8 +8,10 @@ import (
 
 type Usecase interface {
 	FetchArticles(ctx context.Context, req *article.ListArticleRequest) ([]*article.Article, error)
+	CreateArticle(ctx context.Context, req *article.CreateArticleRequest) (int32, error)
 }
 
 type Repository interface {
 	FetchArticles(ctx context.Context, req *article.ListArticleRequest) ([]*article.Article, error)
+	CreateArticle(ctx context.Context, req *article.CreateArticleRequest) error
 }
