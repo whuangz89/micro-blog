@@ -60,7 +60,7 @@ func main() {
 		}
 	}()
 
-	h := handler.NewArticleHandler(dbConn)
+	h := handler.NewArticleHandler(srv, dbConn)
 	article.RegisterArticleServiceHandler(srv.Server(), h)
 
 	if err := srv.Run(); err != nil {

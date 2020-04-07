@@ -33,3 +33,11 @@ func (a *articleUsecase) CreateArticle(ctx context.Context, req *pb.CreateArticl
 	}
 	return 200, nil
 }
+
+func (a *articleUsecase) DeleteArticle(ctx context.Context, req *pb.DeleteArticleRequest) (int32, error) {
+	err := a.articleRepo.DeleteArticle(ctx, req)
+	if err != nil {
+		return 400, err
+	}
+	return 200, nil
+}

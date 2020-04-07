@@ -3,9 +3,10 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 
 	"github.com/sirupsen/logrus"
-	"github.com/whuangz/micro-blog/article/interface"
+	article "github.com/whuangz/micro-blog/article/interface"
 	pb "github.com/whuangz/micro-blog/article/proto/article"
 )
 
@@ -79,6 +80,30 @@ func (m *articleRepository) CreateArticle(ctx context.Context, req *pb.CreateArt
 	_, err = stmt.ExecContext(ctx, req.Title, req.Content, req.AuthorId)
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *articleRepository) DeleteArticle(ctx context.Context, req *pb.DeleteArticleRequest) error {
+	query := `DELETE FROM article WHERE id=?`
+	stmt, err := m.Conn.PrepareContext(ctx, query)
+	if err != nil {
+		return err
+	}
+
+	res, err := stmt.ExecContext(ctx, req.Id)
+	if err != nil {
+		return err
+	}
+
+	rowsAfected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAfected != 1 {
+		return errors.New("Cannot Delete Article with this Id")
 	}
 
 	return nil

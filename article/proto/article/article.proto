@@ -3,6 +3,7 @@ syntax = "proto3";
 service ArticleService {
     rpc FetchArticles(ListArticleRequest) returns (Result);
     rpc CreateArticle(CreateArticleRequest) returns (Result);
+    rpc DeleteArticle(DeleteArticleRequest) returns (Result);
 }
 
 message CreateArticleRequest {
@@ -14,6 +15,9 @@ message ListArticleRequest {}
 message DetailRequest {
     int64 id = 1;
     string slug = 2;
+}
+message DeleteArticleRequest {
+    int64 id = 1;
 }
 
 message Article {

@@ -36,6 +36,7 @@ var _ server.Option
 type ArticleService interface {
 	FetchArticles(ctx context.Context, in *ListArticleRequest, opts ...client.CallOption) (*Result, error)
 	CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...client.CallOption) (*Result, error)
+	DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...client.CallOption) (*Result, error)
 }
 
 type articleService struct {
@@ -70,17 +71,29 @@ func (c *articleService) CreateArticle(ctx context.Context, in *CreateArticleReq
 	return out, nil
 }
 
+func (c *articleService) DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...client.CallOption) (*Result, error) {
+	req := c.c.NewRequest(c.name, "ArticleService.DeleteArticle", in)
+	out := new(Result)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for ArticleService service
 
 type ArticleServiceHandler interface {
 	FetchArticles(context.Context, *ListArticleRequest, *Result) error
 	CreateArticle(context.Context, *CreateArticleRequest, *Result) error
+	DeleteArticle(context.Context, *DeleteArticleRequest, *Result) error
 }
 
 func RegisterArticleServiceHandler(s server.Server, hdlr ArticleServiceHandler, opts ...server.HandlerOption) error {
 	type articleService interface {
 		FetchArticles(ctx context.Context, in *ListArticleRequest, out *Result) error
 		CreateArticle(ctx context.Context, in *CreateArticleRequest, out *Result) error
+		DeleteArticle(ctx context.Context, in *DeleteArticleRequest, out *Result) error
 	}
 	type ArticleService struct {
 		articleService
@@ -99,4 +112,8 @@ func (h *articleServiceHandler) FetchArticles(ctx context.Context, in *ListArtic
 
 func (h *articleServiceHandler) CreateArticle(ctx context.Context, in *CreateArticleRequest, out *Result) error {
 	return h.ArticleServiceHandler.CreateArticle(ctx, in, out)
+}
+
+func (h *articleServiceHandler) DeleteArticle(ctx context.Context, in *DeleteArticleRequest, out *Result) error {
+	return h.ArticleServiceHandler.DeleteArticle(ctx, in, out)
 }
