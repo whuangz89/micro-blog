@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"errors"
 
+	"github.com/micro/go-micro/v2/errors"
 	"github.com/sirupsen/logrus"
 	article "github.com/whuangz/micro-blog/article/interface"
 	pb "github.com/whuangz/micro-blog/article/proto/article"
@@ -103,7 +103,7 @@ func (m *articleRepository) DeleteArticle(ctx context.Context, req *pb.DeleteArt
 	}
 
 	if rowsAfected != 1 {
-		return errors.New("Cannot Delete Article with this Id")
+		return errors.NotFound("", "Cannot Delete Article with this Id")
 	}
 
 	return nil

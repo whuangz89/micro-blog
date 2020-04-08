@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/errors"
 	article "github.com/whuangz/micro-blog/article/interface"
 	pb "github.com/whuangz/micro-blog/article/proto/article"
@@ -13,17 +12,15 @@ import (
 )
 
 type handler struct {
-	name    string
 	usecase article.Usecase
 }
 
-func NewArticleHandler(srv micro.Service, dbConn *sql.DB) *handler {
+func NewArticleHandler(dbConn *sql.DB) *handler {
 
 	articleRepo := repository.NewMysqlArticleRepository(dbConn)
 	au := usecase.NewArticleUsecase(articleRepo)
 
 	return &handler{
-		name:    srv.Name(),
 		usecase: au,
 	}
 }
@@ -40,8 +37,8 @@ func (h *handler) FetchArticles(ctx context.Context, req *pb.ListArticleRequest,
 
 func (h *handler) CreateArticle(ctx context.Context, req *pb.CreateArticleRequest, res *pb.Result) error {
 
-	if req == nil {
-		return errors.BadRequest(h.name, "Missing Param")
+	if req.Title == "" || req.Content == "" {
+		return errors.BadRequest("", "Missing Param")
 	}
 
 	status, err := h.usecase.CreateArticle(ctx, req)
@@ -56,7 +53,7 @@ func (h *handler) CreateArticle(ctx context.Context, req *pb.CreateArticleReques
 func (h *handler) DeleteArticle(ctx context.Context, req *pb.DeleteArticleRequest, res *pb.Result) error {
 
 	if req.Id == 0 {
-		return errors.BadRequest(h.name, "Missing Article ID")
+		return errors.BadRequest("", "Missing Article ID")
 	}
 
 	status, err := h.usecase.DeleteArticle(ctx, req)
