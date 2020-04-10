@@ -4,8 +4,14 @@ service ArticleService {
     rpc FetchArticles(ListArticleRequest) returns (Result);
     rpc CreateArticle(CreateArticleRequest) returns (Result);
     rpc DeleteArticle(DeleteArticleRequest) returns (Result);
+    rpc UpdateArticle(UpdateArticleRequest) returns (Result);
 }
 
+message UpdateArticleRequest {
+    int64 id = 1;
+    string title = 2;
+    string content = 3;
+}
 message CreateArticleRequest {
     string title = 1;
     string content = 2;

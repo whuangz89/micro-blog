@@ -108,3 +108,23 @@ func (m *articleRepository) DeleteArticle(ctx context.Context, req *pb.DeleteArt
 
 	return nil
 }
+
+func (m *articleRepository) UpdateArticle(ctx context.Context, req *pb.UpdateArticleRequest) error {
+	query := `UPDATE article SET title=?, content=?, updated_at=NOW() WHERE id=?`
+	stmt, err := m.Conn.PrepareContext(ctx, query)
+	if err != nil {
+		return err
+	}
+
+	res, err := stmt.ExecContext(ctx, req.Title, req.Content, req.Id)
+	if err != nil {
+		return err
+	}
+
+	rowsAfected, err := res.RowsAffected()
+	if rowsAfected != 1 {
+		return errors.NotFound("", "Article Not Found")
+	}
+
+	return nil
+}

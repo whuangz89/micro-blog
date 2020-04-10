@@ -64,3 +64,25 @@ func (h *handler) DeleteArticle(ctx context.Context, req *pb.DeleteArticleReques
 	res.Message = "Successfully deleted Article"
 	return nil
 }
+
+func (h *handler) UpdateArticle(ctx context.Context, req *pb.UpdateArticleRequest, res *pb.Result) error {
+
+	if req.Title == "" || req.Content == "" {
+		return errors.BadRequest("", "Missing Param")
+	}
+
+	if req.Id == 0 {
+		return errors.NotFound("", "Article Not Found")
+	}
+
+	err := h.usecase.UpdateArticle(ctx, req)
+	if err != nil {
+		return err
+	}
+
+	res.StatusCode = 200
+	res.Message = "Successfully updated Article"
+
+	return nil
+
+}

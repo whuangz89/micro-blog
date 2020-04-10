@@ -41,3 +41,11 @@ func (a *articleUsecase) DeleteArticle(ctx context.Context, req *pb.DeleteArticl
 	}
 	return 200, nil
 }
+
+func (a *articleUsecase) UpdateArticle(ctx context.Context, req *pb.UpdateArticleRequest) error {
+	err := a.articleRepo.UpdateArticle(ctx, req)
+	if err != nil {
+		return err
+	}
+	return nil
+}
