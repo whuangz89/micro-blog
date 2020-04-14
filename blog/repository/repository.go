@@ -6,19 +6,19 @@ import (
 
 	"github.com/micro/go-micro/v2/errors"
 	"github.com/sirupsen/logrus"
-	article "github.com/whuangz/micro-blog/article/interface"
-	pb "github.com/whuangz/micro-blog/article/proto/article"
+	blog "github.com/whuangz/micro-blog/blog/interface"
+	pb "github.com/whuangz/micro-blog/blog/proto/blog"
 )
 
-type articleRepository struct {
+type blogRepository struct {
 	Conn *sql.DB
 }
 
-func NewMysqlArticleRepository(Conn *sql.DB) article.Repository {
-	return &articleRepository{Conn}
+func NewMysqlBlogRepository(Conn *sql.DB) blog.Repository {
+	return &blogRepository{Conn}
 }
 
-func (m *articleRepository) fetch(ctx context.Context, query string, args ...interface{}) ([]*pb.Article, error) {
+func (m *blogRepository) fetch(ctx context.Context, query string, args ...interface{}) ([]*pb.Article, error) {
 	rows, err := m.Conn.QueryContext(ctx, query, args...)
 	if err != nil {
 		logrus.Error(err)
@@ -58,7 +58,7 @@ func (m *articleRepository) fetch(ctx context.Context, query string, args ...int
 	return result, nil
 }
 
-func (m *articleRepository) FetchArticles(ctx context.Context, req *pb.ListArticleRequest) ([]*pb.Article, error) {
+func (m *blogRepository) FetchArticles(ctx context.Context, req *pb.ListArticleRequest) ([]*pb.Article, error) {
 	query := `SELECT id,title,content, author_id, updated_at, created_at
   						FROM article`
 
@@ -70,14 +70,14 @@ func (m *articleRepository) FetchArticles(ctx context.Context, req *pb.ListArtic
 	return res, nil
 }
 
-func (m *articleRepository) CreateArticle(ctx context.Context, req *pb.CreateArticleRequest) error {
+func (m *blogRepository) CreateArticle(ctx context.Context, req *pb.Article) error {
 	query := `INSERT INTO article(title, content, author_id, updated_at, created_at) VALUES(?,?,?,NOW(),NOW())`
 	stmt, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.ExecContext(ctx, req.Title, req.Content, req.AuthorId)
+	_, err = stmt.ExecContext(ctx, req.Title, req.Content, 1)
 	if err != nil {
 		return err
 	}
@@ -85,7 +85,7 @@ func (m *articleRepository) CreateArticle(ctx context.Context, req *pb.CreateArt
 	return nil
 }
 
-func (m *articleRepository) DeleteArticle(ctx context.Context, req *pb.DeleteArticleRequest) error {
+func (m *blogRepository) DeleteArticle(ctx context.Context, req *pb.Article) error {
 	query := `DELETE FROM article WHERE id=?`
 	stmt, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {
@@ -109,7 +109,7 @@ func (m *articleRepository) DeleteArticle(ctx context.Context, req *pb.DeleteArt
 	return nil
 }
 
-func (m *articleRepository) UpdateArticle(ctx context.Context, req *pb.UpdateArticleRequest) error {
+func (m *blogRepository) UpdateArticle(ctx context.Context, req *pb.Article) error {
 	query := `UPDATE article SET title=?, content=?, updated_at=NOW() WHERE id=?`
 	stmt, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {

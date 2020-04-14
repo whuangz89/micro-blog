@@ -11,8 +11,8 @@ import (
 	"github.com/spf13/viper"
 
 	micro "github.com/micro/go-micro/v2"
-	"github.com/whuangz/micro-blog/article/handler"
-	"github.com/whuangz/micro-blog/article/proto/article"
+	blogHandler "github.com/whuangz/micro-blog/blog/handler"
+	blogPb "github.com/whuangz/micro-blog/blog/proto/blog"
 )
 
 func init() {
@@ -29,7 +29,7 @@ func init() {
 
 func main() {
 	srv := micro.NewService(
-		micro.Name("blog.service.article"),
+		micro.Name("blog.service"),
 	)
 	srv.Init()
 
@@ -60,8 +60,8 @@ func main() {
 		}
 	}()
 
-	h := handler.NewArticleHandler(dbConn)
-	article.RegisterArticleServiceHandler(srv.Server(), h)
+	h := blogHandler.NewArticleHandler(dbConn)
+	blogPb.RegisterBlogServiceHandler(srv.Server(), h)
 
 	if err := srv.Run(); err != nil {
 		log.Fatalf("failed to serve: %v", err)

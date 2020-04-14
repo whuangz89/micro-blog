@@ -1,4 +1,4 @@
-module github.com/whuangz/micro-blog/article
+module github.com/whuangz/micro-blog/blog
 
 go 1.14
 
@@ -10,4 +10,5 @@ require (
 	github.com/micro/go-micro/v2 v2.4.0
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/viper v1.6.2
+	github.com/whuangz/micro-blog/article v0.0.0-20200410121257-125ab4a61010
 )

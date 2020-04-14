@@ -5,10 +5,10 @@ import (
 	"database/sql"
 
 	"github.com/micro/go-micro/v2/errors"
-	article "github.com/whuangz/micro-blog/article/interface"
-	pb "github.com/whuangz/micro-blog/article/proto/article"
-	"github.com/whuangz/micro-blog/article/repository"
-	"github.com/whuangz/micro-blog/article/usecase"
+	article "github.com/whuangz/micro-blog/blog/interface"
+	pb "github.com/whuangz/micro-blog/blog/proto/blog"
+	"github.com/whuangz/micro-blog/blog/repository"
+	"github.com/whuangz/micro-blog/blog/usecase"
 )
 
 type handler struct {
@@ -17,15 +17,15 @@ type handler struct {
 
 func NewArticleHandler(dbConn *sql.DB) *handler {
 
-	articleRepo := repository.NewMysqlArticleRepository(dbConn)
-	au := usecase.NewArticleUsecase(articleRepo)
+	blogRepo := repository.NewMysqlBlogRepository(dbConn)
+	au := usecase.NewBlogUsecase(blogRepo)
 
 	return &handler{
 		usecase: au,
 	}
 }
 
-func (h *handler) FetchArticles(ctx context.Context, req *pb.ListArticleRequest, res *pb.Result) error {
+func (h *handler) FetchArticles(ctx context.Context, req *pb.ListArticleRequest, res *pb.ArticleResult) error {
 	articles, err := h.usecase.FetchArticles(ctx, req)
 	if err != nil {
 		return err
@@ -35,7 +35,7 @@ func (h *handler) FetchArticles(ctx context.Context, req *pb.ListArticleRequest,
 	return nil
 }
 
-func (h *handler) CreateArticle(ctx context.Context, req *pb.CreateArticleRequest, res *pb.Result) error {
+func (h *handler) CreateArticle(ctx context.Context, req *pb.Article, res *pb.ArticleResult) error {
 
 	if req.Title == "" || req.Content == "" {
 		return errors.BadRequest("", "Missing Param")
@@ -50,7 +50,7 @@ func (h *handler) CreateArticle(ctx context.Context, req *pb.CreateArticleReques
 	return nil
 }
 
-func (h *handler) DeleteArticle(ctx context.Context, req *pb.DeleteArticleRequest, res *pb.Result) error {
+func (h *handler) DeleteArticle(ctx context.Context, req *pb.Article, res *pb.ArticleResult) error {
 
 	if req.Id == 0 {
 		return errors.BadRequest("", "Missing Article ID")
@@ -65,7 +65,7 @@ func (h *handler) DeleteArticle(ctx context.Context, req *pb.DeleteArticleReques
 	return nil
 }
 
-func (h *handler) UpdateArticle(ctx context.Context, req *pb.UpdateArticleRequest, res *pb.Result) error {
+func (h *handler) UpdateArticle(ctx context.Context, req *pb.Article, res *pb.ArticleResult) error {
 
 	if req.Title == "" || req.Content == "" {
 		return errors.BadRequest("", "Missing Param")
