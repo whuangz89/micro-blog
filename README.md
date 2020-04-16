@@ -4,4 +4,4 @@ Building CRUD Service using go-micro and mysql
 
 #### The diagram:
 
-![micro blog architecture](https://github.com/whuangz/micro-blog/blob/master/diagram.png)
+![micro blog architecture](https://github.com/whuangz/micro-blog/blob/master/diagrams.png)
