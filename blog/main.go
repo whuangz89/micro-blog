@@ -1,18 +1,16 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
-	"net/url"
 	"os"
 
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/viper"
+	"github.com/whuangz/micro-blog/blog/repository"
 
 	micro "github.com/micro/go-micro/v2"
 	blogHandler "github.com/whuangz/micro-blog/blog/handler"
-	blogPb "github.com/whuangz/micro-blog/blog/proto/blog"
+	blogPb "github.com/whuangz/micro-blog/blog/proto"
 )
 
 func init() {
@@ -38,29 +36,29 @@ func main() {
 	dbUser := viper.GetString(`database.user`)
 	dbPass := viper.GetString(`database.pass`)
 	dbName := viper.GetString(`database.name`)
-	connection := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPass, dbHost, dbPort, dbName)
-	val := url.Values{}
-	val.Add("parseTime", "1")
-	val.Add("loc", "Asia/Jakarta")
-	dsn := fmt.Sprintf("%s?%s", connection, val.Encode())
-	dbConn, err := sql.Open(`mysql`, dsn)
+
+	db, err := repository.New(
+		dbHost, dbName, dbUser, dbPass, dbPort,
+	)
+
 	if err != nil && viper.GetBool("debug") {
 		fmt.Println(err)
 	}
-	err = dbConn.Ping()
+
+	err = db.Ping()
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}
 
 	defer func() {
-		err := dbConn.Close()
+		err := db.Close()
 		if err != nil {
 			log.Fatal(err)
 		}
 	}()
 
-	h := blogHandler.NewArticleHandler(dbConn)
+	h := blogHandler.NewArticleHandler(db)
 	blogPb.RegisterBlogServiceHandler(srv.Server(), h)
 
 	if err := srv.Run(); err != nil {

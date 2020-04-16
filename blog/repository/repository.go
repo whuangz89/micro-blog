@@ -3,19 +3,44 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"net/url"
+
+	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/micro/go-micro/v2/errors"
 	"github.com/sirupsen/logrus"
-	blog "github.com/whuangz/micro-blog/blog/interface"
-	pb "github.com/whuangz/micro-blog/blog/proto/blog"
+	pb "github.com/whuangz/micro-blog/blog/proto"
 )
 
 type blogRepository struct {
 	Conn *sql.DB
 }
 
-func NewMysqlBlogRepository(Conn *sql.DB) blog.Repository {
-	return &blogRepository{Conn}
+func New(dbHost, dbName, dbUser, dbPass, dbPort string) (Service, error) {
+
+	connection := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPass, dbHost, dbPort, dbName)
+	val := url.Values{}
+	val.Add("parseTime", "1")
+	val.Add("loc", "Asia/Jakarta")
+	dsn := fmt.Sprintf("%s?%s", connection, val.Encode())
+	dbConn, err := sql.Open(`mysql`, dsn)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &blogRepository{dbConn}, nil
+}
+
+// Close will terminate the database connection
+func (m *blogRepository) Close() error {
+	return m.Conn.Close()
+}
+
+// Close will terminate the database connection
+func (m *blogRepository) Ping() error {
+	return m.Conn.Ping()
 }
 
 func (m *blogRepository) fetch(ctx context.Context, query string, args ...interface{}) ([]*pb.Article, error) {

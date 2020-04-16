@@ -2,31 +2,24 @@ package handler
 
 import (
 	"context"
-	"database/sql"
 
 	"github.com/micro/go-micro/v2/errors"
-	article "github.com/whuangz/micro-blog/blog/interface"
-	pb "github.com/whuangz/micro-blog/blog/proto/blog"
+	pb "github.com/whuangz/micro-blog/blog/proto"
 	"github.com/whuangz/micro-blog/blog/repository"
-	"github.com/whuangz/micro-blog/blog/usecase"
 )
 
 type handler struct {
-	usecase article.Usecase
+	repository repository.Service
 }
 
-func NewArticleHandler(dbConn *sql.DB) *handler {
-
-	blogRepo := repository.NewMysqlBlogRepository(dbConn)
-	au := usecase.NewBlogUsecase(blogRepo)
-
+func NewArticleHandler(repo repository.Service) *handler {
 	return &handler{
-		usecase: au,
+		repository: repo,
 	}
 }
 
 func (h *handler) FetchArticles(ctx context.Context, req *pb.ListArticleRequest, res *pb.ArticleResult) error {
-	articles, err := h.usecase.FetchArticles(ctx, req)
+	articles, err := h.repository.FetchArticles(ctx, req)
 	if err != nil {
 		return err
 	}
@@ -41,11 +34,12 @@ func (h *handler) CreateArticle(ctx context.Context, req *pb.Article, res *pb.Ar
 		return errors.BadRequest("", "Missing Param")
 	}
 
-	status, err := h.usecase.CreateArticle(ctx, req)
+	err := h.repository.CreateArticle(ctx, req)
+
 	if err != nil {
 		return err
 	}
-	res.StatusCode = status
+	res.StatusCode = 200
 	res.Message = "Success Inserted Article"
 	return nil
 }
@@ -56,11 +50,10 @@ func (h *handler) DeleteArticle(ctx context.Context, req *pb.Article, res *pb.Ar
 		return errors.BadRequest("", "Missing Article ID")
 	}
 
-	status, err := h.usecase.DeleteArticle(ctx, req)
-	if err != nil {
+	if err := h.repository.DeleteArticle(ctx, req); err != nil {
 		return err
 	}
-	res.StatusCode = status
+	res.StatusCode = 200
 	res.Message = "Successfully deleted Article"
 	return nil
 }
@@ -75,7 +68,7 @@ func (h *handler) UpdateArticle(ctx context.Context, req *pb.Article, res *pb.Ar
 		return errors.NotFound("", "Article Not Found")
 	}
 
-	err := h.usecase.UpdateArticle(ctx, req)
+	err := h.repository.UpdateArticle(ctx, req)
 	if err != nil {
 		return err
 	}
