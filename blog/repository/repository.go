@@ -74,9 +74,7 @@ func (m *blogRepository) fetch(ctx context.Context, query string, args ...interf
 			logrus.Error(err)
 			return nil, err
 		}
-		t.Author = &pb.Author{
-			Id: authorID,
-		}
+		t.AuthorId = authorID
 		result = append(result, t)
 	}
 
@@ -149,6 +147,65 @@ func (m *blogRepository) UpdateArticle(ctx context.Context, req *pb.Article) err
 	rowsAfected, err := res.RowsAffected()
 	if rowsAfected != 1 {
 		return errors.NotFound("", "Article Not Found")
+	}
+
+	return nil
+}
+
+//Categories
+
+func (m *blogRepository) FetchCategories(ctx context.Context, req *pb.ListCategoryRequest) ([]*pb.Category, error) {
+	query := `SELECT id, title, color, updated_at, created_at
+  						FROM category`
+
+	rows, err := m.Conn.QueryContext(ctx, query)
+	if err != nil {
+		logrus.Error(err)
+		return nil, err
+	}
+
+	defer func() {
+		err := rows.Close()
+		if err != nil {
+			logrus.Error(err)
+		}
+	}()
+
+	result := make([]*pb.Category, 0)
+	for rows.Next() {
+		t := new(pb.Category)
+		err = rows.Scan(
+			&t.Id,
+			&t.Name,
+			&t.Color,
+			&t.UpdatedAt,
+			&t.CreatedAt,
+		)
+
+		if err != nil {
+			logrus.Error(err)
+			return nil, err
+		}
+		result = append(result, t)
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (m *blogRepository) CreateCategory(ctx context.Context, req *pb.Category) error {
+	query := `INSERT INTO category(name, color, updated_at, created_at) VALUES(?,?,NOW(),NOW())`
+	stmt, err := m.Conn.PrepareContext(ctx, query)
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.ExecContext(ctx, req.Name, req.Color)
+	if err != nil {
+		return err
 	}
 
 	return nil

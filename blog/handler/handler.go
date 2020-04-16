@@ -79,3 +79,29 @@ func (h *handler) UpdateArticle(ctx context.Context, req *pb.Article, res *pb.Ar
 	return nil
 
 }
+
+func (h *handler) FetchCategories(ctx context.Context, req *pb.ListCategoryRequest, res *pb.CategoryResult) error {
+	categories, err := h.repository.FetchCategories(ctx, req)
+	if err != nil {
+		return err
+	}
+
+	res.Categories = categories
+	return nil
+}
+
+func (h *handler) CreateCategory(ctx context.Context, req *pb.Category, res *pb.CategoryResult) error {
+
+	if req.Name == "" || req.Color == "" {
+		return errors.BadRequest("", "Missing Param")
+	}
+
+	err := h.repository.CreateCategory(ctx, req)
+
+	if err != nil {
+		return err
+	}
+	res.StatusCode = 200
+	res.Message = "Success Inserted New Category"
+	return nil
+}

@@ -7,9 +7,8 @@ service BlogService {
     rpc UpdateArticle(Article) returns (ArticleResult);
 
 
-    // rpc FetchCategories(ListCategoryRequest) returns (CategoryResult);
-    // rpc CreateCategory(Category) returns (CategoryResult);
-    // rpc DeleteCategory(Category) returns (CategoryResult);
+    rpc FetchCategories(ListCategoryRequest) returns (CategoryResult);
+    rpc CreateCategory(Category) returns (CategoryResult);
 }
 
 message ListArticleRequest {}
@@ -18,13 +17,9 @@ message Article {
     int64 id = 1;
     string title = 2;
     string content = 3;
-    Author author = 4;
+    int64 author_id = 4;
     string created_at = 5;
     string updated_at = 6;
-}
-
-message Author {
-    int64 id = 1;
 }
 
 message ArticleResult {

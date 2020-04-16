@@ -12,6 +12,9 @@ type Service interface {
 	DeleteArticle(ctx context.Context, req *pb.Article) error
 	UpdateArticle(ctx context.Context, req *pb.Article) error
 
+	FetchCategories(ctx context.Context, req *pb.ListCategoryRequest) ([]*pb.Category, error)
+	CreateCategory(ctx context.Context, req *pb.Category) error
+
 	Ping() error
 	Close() error
 }
