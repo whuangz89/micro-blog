@@ -6,11 +6,11 @@ import (
 	"os"
 
 	"github.com/spf13/viper"
-	"github.com/whuangz/micro-blog/blog/repository"
+	"github.com/whuangz/micro-blog/article/repository"
 
 	micro "github.com/micro/go-micro/v2"
-	blogHandler "github.com/whuangz/micro-blog/blog/handler"
-	blogPb "github.com/whuangz/micro-blog/blog/proto"
+	articleHandler "github.com/whuangz/micro-blog/article/handler"
+	articlePb "github.com/whuangz/micro-blog/article/proto"
 )
 
 func init() {
@@ -27,7 +27,7 @@ func init() {
 
 func main() {
 	srv := micro.NewService(
-		micro.Name("micro-blog-v1-blogs"),
+		micro.Name("micro-blog-v1-article"),
 	)
 	srv.Init()
 
@@ -58,8 +58,8 @@ func main() {
 		}
 	}()
 
-	h := blogHandler.NewArticleHandler(db)
-	blogPb.RegisterBlogServiceHandler(srv.Server(), h)
+	h := articleHandler.NewArticleHandler(db)
+	articlePb.RegisterArticleServiceHandler(srv.Server(), h)
 
 	if err := srv.Run(); err != nil {
 		log.Fatalf("failed to serve: %v", err)

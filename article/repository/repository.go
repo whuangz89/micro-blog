@@ -10,10 +10,10 @@ import (
 
 	"github.com/micro/go-micro/v2/errors"
 	"github.com/sirupsen/logrus"
-	pb "github.com/whuangz/micro-blog/blog/proto"
+	pb "github.com/whuangz/micro-blog/article/proto"
 )
 
-type blogRepository struct {
+type articleRepository struct {
 	Conn *sql.DB
 }
 
@@ -30,20 +30,20 @@ func New(dbHost, dbName, dbUser, dbPass, dbPort string) (Service, error) {
 		return nil, err
 	}
 
-	return &blogRepository{dbConn}, nil
+	return &articleRepository{dbConn}, nil
 }
 
 // Close will terminate the database connection
-func (m *blogRepository) Close() error {
+func (m *articleRepository) Close() error {
 	return m.Conn.Close()
 }
 
 // Close will terminate the database connection
-func (m *blogRepository) Ping() error {
+func (m *articleRepository) Ping() error {
 	return m.Conn.Ping()
 }
 
-func (m *blogRepository) fetch(ctx context.Context, query string, args ...interface{}) ([]*pb.Article, error) {
+func (m *articleRepository) fetch(ctx context.Context, query string, args ...interface{}) ([]*pb.Article, error) {
 	rows, err := m.Conn.QueryContext(ctx, query, args...)
 	if err != nil {
 		logrus.Error(err)
@@ -81,7 +81,7 @@ func (m *blogRepository) fetch(ctx context.Context, query string, args ...interf
 	return result, nil
 }
 
-func (m *blogRepository) FetchArticles(ctx context.Context, req *pb.ListArticleRequest) ([]*pb.Article, error) {
+func (m *articleRepository) FetchArticles(ctx context.Context, req *pb.ListArticleRequest) ([]*pb.Article, error) {
 	query := `SELECT id,title,content, author_id, updated_at, created_at
   						FROM article`
 
@@ -93,7 +93,7 @@ func (m *blogRepository) FetchArticles(ctx context.Context, req *pb.ListArticleR
 	return res, nil
 }
 
-func (m *blogRepository) CreateArticle(ctx context.Context, req *pb.Article) error {
+func (m *articleRepository) CreateArticle(ctx context.Context, req *pb.Article) error {
 	query := `INSERT INTO article(title, content, author_id, updated_at, created_at) VALUES(?,?,?,NOW(),NOW())`
 	stmt, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {
@@ -108,7 +108,7 @@ func (m *blogRepository) CreateArticle(ctx context.Context, req *pb.Article) err
 	return nil
 }
 
-func (m *blogRepository) DeleteArticle(ctx context.Context, req *pb.Article) error {
+func (m *articleRepository) DeleteArticle(ctx context.Context, req *pb.Article) error {
 	query := `DELETE FROM article WHERE id=?`
 	stmt, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {
@@ -132,7 +132,7 @@ func (m *blogRepository) DeleteArticle(ctx context.Context, req *pb.Article) err
 	return nil
 }
 
-func (m *blogRepository) UpdateArticle(ctx context.Context, req *pb.Article) error {
+func (m *articleRepository) UpdateArticle(ctx context.Context, req *pb.Article) error {
 	query := `UPDATE article SET title=?, content=?, updated_at=NOW() WHERE id=?`
 	stmt, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {
@@ -154,7 +154,7 @@ func (m *blogRepository) UpdateArticle(ctx context.Context, req *pb.Article) err
 
 //Categories
 
-func (m *blogRepository) FetchCategories(ctx context.Context, req *pb.ListCategoryRequest) ([]*pb.Category, error) {
+func (m *articleRepository) FetchCategories(ctx context.Context, req *pb.ListCategoryRequest) ([]*pb.Category, error) {
 	query := `SELECT id, title, color, updated_at, created_at
   						FROM category`
 
@@ -196,7 +196,7 @@ func (m *blogRepository) FetchCategories(ctx context.Context, req *pb.ListCatego
 	return result, nil
 }
 
-func (m *blogRepository) CreateCategory(ctx context.Context, req *pb.Category) error {
+func (m *articleRepository) CreateCategory(ctx context.Context, req *pb.Category) error {
 	query := `INSERT INTO category(name, color, updated_at, created_at) VALUES(?,?,NOW(),NOW())`
 	stmt, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {

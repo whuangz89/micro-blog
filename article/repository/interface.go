@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	pb "github.com/whuangz/micro-blog/blog/proto"
+	pb "github.com/whuangz/micro-blog/article/proto"
 )
 
 type Service interface {

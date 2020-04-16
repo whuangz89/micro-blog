@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/micro/go-micro/v2/errors"
-	pb "github.com/whuangz/micro-blog/blog/proto"
-	"github.com/whuangz/micro-blog/blog/repository"
+	pb "github.com/whuangz/micro-blog/article/proto"
+	"github.com/whuangz/micro-blog/article/repository"
 )
 
 type handler struct {

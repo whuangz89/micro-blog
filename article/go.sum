@@ -399,8 +399,11 @@ github.com/valyala/fasttemplate v1.0.1 h1:tY9CJiPnMXf1ERmG2EyK7gNUd+c6RKGD0IfU8W
 github.com/valyala/fasttemplate v1.0.1/go.mod h1:UQGH1tvbgY+Nz5t2n7tXsz52dQxojPUpymEIMZ47gx8=
 github.com/vultr/govultr v0.1.4/go.mod h1:9H008Uxr/C4vFNGLqKx232C206GL0PBHzOP0809bGNA=
 github.com/whuangz/micro-blog v0.0.0-20200410121257-125ab4a61010 h1:DB/uv9IMyNAmV72iXOFShfzqYuRqGi0TctvCqcwcT1Y=
+github.com/whuangz/micro-blog v0.0.0-20200416131239-8c0e5ceaf357 h1:vtkxrtD52TA3sAwGoHkwLK3JFn6cHg19FrLo4tiJFVw=
 github.com/whuangz/micro-blog/article v0.0.0-20200410121257-125ab4a61010 h1:6K1I752Kk6KWGxhmb8DawtX04Uw0ex3ik2P7WYTo03I=
 github.com/whuangz/micro-blog/article v0.0.0-20200410121257-125ab4a61010/go.mod h1:7CV0Mmo5NXf/p7qZtv4Bt82Uy/ftf1nRZHKReJMZA/U=
+github.com/whuangz/micro-blog/blog v0.0.0-20200416131239-8c0e5ceaf357 h1:KxJHD9YT28QQ96AGdGil6VaecfNKdqHi7aQUSeelx4U=
+github.com/whuangz/micro-blog/blog v0.0.0-20200416131239-8c0e5ceaf357/go.mod h1:NQ5sPjmEJZUboxzV5EU0iqEqZbxn0HnB8R8DqzZOTb0=
 github.com/xanzy/ssh-agent v0.2.1/go.mod h1:mLlQY/MoOhWBj+gOGMQkOeiEvkx+8pJSI+0Bx9h2kr4=
 github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f/go.mod h1:N2zxlSyiKSe5eX1tZViRH5QA0qijqEDrYZiPEAiq3wU=
 github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415/go.mod h1:GwrjFmJcFw6At/Gs6z4yjiIwzuJ1/+UwLxMQDVQXShQ=

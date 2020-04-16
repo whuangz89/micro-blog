@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-service BlogService {
+service ArticleService {
     rpc FetchArticles(ListArticleRequest) returns (ArticleResult);
     rpc CreateArticle(Article) returns (ArticleResult);
     rpc DeleteArticle(Article) returns (ArticleResult);
