@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+service Blogs {
+    rpc Fetch(ListRequest) returns (ListResponse);
+    rpc Create(Article) returns (Response);
+    rpc Delete(Article) returns (Response);
+    rpc Update(Article) returns (Response);
+
+
+    rpc FetchTopic(ListRequest) returns (ListResponse);
+    rpc CreateTopic(Topic) returns (Response);
+}
+
+message ListRequest {
+    int32 page = 1;
+    int32 limit = 2;
+}
+
+message Article {
+    uint32 id = 1;
+    string title = 2;
+    string slug = 3;
+    string content = 4;
+    uint32 author_id = 5;
+    Topic topic = 6;
+    string status = 7;
+    int64 created_at = 8;
+    int64 updated_at = 9;
+}
+
+message Topic {
+    uint32 id = 1;
+    string title = 2;
+    string tag = 3;
+    string slug = 4;
+    string color = 5;
+    int64 created_at = 6;
+    int64 updated_at = 7;
+}
+
+message ListResponse {
+	Error error = 1;
+    repeated Article articles = 2;
+    repeated Topic topics = 3;
+}
+
+message Response {
+	Error error = 1;
+    Article article = 2;
+    Topic topic = 3;
+}
+
+message Error {
+	int32 code = 1;
+	string message = 2;
+}

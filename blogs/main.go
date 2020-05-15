@@ -3,14 +3,13 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/spf13/viper"
-	"github.com/whuangz/micro-blog/article/repository"
+	"github.com/whuangz/micro-blog/blogs/repository"
 
 	micro "github.com/micro/go-micro/v2"
-	articleHandler "github.com/whuangz/micro-blog/article/handler"
-	articlePb "github.com/whuangz/micro-blog/article/proto"
+	"github.com/whuangz/micro-blog/blogs/handler"
+	blogPb "github.com/whuangz/micro-blog/blogs/proto"
 )
 
 func init() {
@@ -27,7 +26,8 @@ func init() {
 
 func main() {
 	srv := micro.NewService(
-		micro.Name("micro-blog-v1-article"),
+		micro.Name("micro-blog-v1-blogs"),
+		micro.Version("latest"),
 	)
 	srv.Init()
 
@@ -44,13 +44,7 @@ func main() {
 	if err != nil && viper.GetBool("debug") {
 		fmt.Println(err)
 	}
-
-	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-		os.Exit(1)
-	}
-
+	db.Migrate()
 	defer func() {
 		err := db.Close()
 		if err != nil {
@@ -58,8 +52,8 @@ func main() {
 		}
 	}()
 
-	h := articleHandler.NewArticleHandler(db)
-	articlePb.RegisterArticleServiceHandler(srv.Server(), h)
+	h := handler.NewBlogHandler(db)
+	blogPb.RegisterBlogsHandler(srv.Server(), h)
 
 	if err := srv.Run(); err != nil {
 		log.Fatalf("failed to serve: %v", err)
