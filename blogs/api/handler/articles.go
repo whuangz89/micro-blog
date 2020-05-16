@@ -10,8 +10,8 @@ import (
 	blogs "github.com/whuangz/micro-blog/blogs/proto"
 )
 
-func (h *handler) Fetch(ctx context.Context, req *pb.ArticleRequest, res *pb.ListResponse) error {
-	rawArticlesRes, err := h.blogs.FetchArticles(ctx, &blogs.ListArticleRequest{})
+func (h *handler) Fetch(ctx context.Context, req *pb.ListRequest, res *pb.ListResponse) error {
+	rawArticlesRes, err := h.blogs.FetchArticles(ctx, &blogs.ListRequest{})
 	if err != nil {
 		return err
 	}
@@ -29,11 +29,11 @@ func (h *handler) Create(ctx context.Context, req *pb.Article, res *pb.Response)
 		return errors.BadRequest("", "Missing Param")
 	}
 
-	_, err := h.blogs.CreateArticle(ctx, req)
+	// _, err := h.blogs.CreateArticle(ctx, req)
 
-	if err != nil {
-		return err
-	}
+	// if err != nil {
+	// 	return err
+	// }
 
 	res.Error.Code = 200
 	return nil
@@ -50,29 +50,34 @@ func (h *handler) Update(ctx context.Context, req *pb.Article, res *pb.Response)
 
 }
 
-func (h *Handler) getTopicForArticle(a *blogs.Article) (*blogs.Topic, error) {
+func (h *handler) getTopicForArticle(a *blogs.Article) (*pb.Topic, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 150*time.Millisecond)
 	defer cancel()
 
-	topic, err := h.blogs.GetTopic(ctx, &blogs.Topic{Id: a.TopicId})
+	rsp, err := h.blogs.GetTopic(ctx, &blogs.Topic{Id: a.TopicId})
 	if err != nil {
 		return nil, err
 	}
 
-	return topic, nil
+	return &pb.Topic{
+		Id:    rsp.Topic.Id,
+		Title: rsp.Topic.Title,
+		Slug:  rsp.Topic.Slug,
+	}, nil
+
 }
 
-func (h *Handler) serializeArticle(a *blogs.Article) *pb.Article {
+func (h *handler) serializeArticle(a *blogs.Article) *pb.Article {
 
 	res := &pb.Article{
-		Id:        a.ID,
+		Id:        a.Id,
 		Title:     a.Title,
 		Slug:      a.Slug,
 		Content:   a.Content,
-		AuthorId:  a.AuthorID,
+		AuthorId:  a.AuthorId,
 		Status:    a.Status,
-		CreatedAt: a.CreatedAt.Unix(),
-		UpdatedAt: a.UpdatedAt.Unix(),
+		CreatedAt: a.CreatedAt,
+		UpdatedAt: a.UpdatedAt,
 	}
 
 	if topic, err := h.getTopicForArticle(a); err == nil {

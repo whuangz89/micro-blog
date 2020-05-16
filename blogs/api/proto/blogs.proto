@@ -7,7 +7,7 @@ service Blogs {
     rpc Update(Article) returns (Response);
 
 
-    rpc FetchTopic(ListRequest) returns (ListResponse);
+    rpc FetchTopics(ListRequest) returns (ListResponse);
     rpc CreateTopic(Topic) returns (Response);
 }
 

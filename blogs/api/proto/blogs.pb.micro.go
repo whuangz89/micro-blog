@@ -38,7 +38,7 @@ type BlogsService interface {
 	Create(ctx context.Context, in *Article, opts ...client.CallOption) (*Response, error)
 	Delete(ctx context.Context, in *Article, opts ...client.CallOption) (*Response, error)
 	Update(ctx context.Context, in *Article, opts ...client.CallOption) (*Response, error)
-	FetchTopic(ctx context.Context, in *ListRequest, opts ...client.CallOption) (*ListResponse, error)
+	FetchTopics(ctx context.Context, in *ListRequest, opts ...client.CallOption) (*ListResponse, error)
 	CreateTopic(ctx context.Context, in *Topic, opts ...client.CallOption) (*Response, error)
 }
 
@@ -94,8 +94,8 @@ func (c *blogsService) Update(ctx context.Context, in *Article, opts ...client.C
 	return out, nil
 }
 
-func (c *blogsService) FetchTopic(ctx context.Context, in *ListRequest, opts ...client.CallOption) (*ListResponse, error) {
-	req := c.c.NewRequest(c.name, "Blogs.FetchTopic", in)
+func (c *blogsService) FetchTopics(ctx context.Context, in *ListRequest, opts ...client.CallOption) (*ListResponse, error) {
+	req := c.c.NewRequest(c.name, "Blogs.FetchTopics", in)
 	out := new(ListResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -121,7 +121,7 @@ type BlogsHandler interface {
 	Create(context.Context, *Article, *Response) error
 	Delete(context.Context, *Article, *Response) error
 	Update(context.Context, *Article, *Response) error
-	FetchTopic(context.Context, *ListRequest, *ListResponse) error
+	FetchTopics(context.Context, *ListRequest, *ListResponse) error
 	CreateTopic(context.Context, *Topic, *Response) error
 }
 
@@ -131,7 +131,7 @@ func RegisterBlogsHandler(s server.Server, hdlr BlogsHandler, opts ...server.Han
 		Create(ctx context.Context, in *Article, out *Response) error
 		Delete(ctx context.Context, in *Article, out *Response) error
 		Update(ctx context.Context, in *Article, out *Response) error
-		FetchTopic(ctx context.Context, in *ListRequest, out *ListResponse) error
+		FetchTopics(ctx context.Context, in *ListRequest, out *ListResponse) error
 		CreateTopic(ctx context.Context, in *Topic, out *Response) error
 	}
 	type Blogs struct {
@@ -161,8 +161,8 @@ func (h *blogsHandler) Update(ctx context.Context, in *Article, out *Response) e
 	return h.BlogsHandler.Update(ctx, in, out)
 }
 
-func (h *blogsHandler) FetchTopic(ctx context.Context, in *ListRequest, out *ListResponse) error {
-	return h.BlogsHandler.FetchTopic(ctx, in, out)
+func (h *blogsHandler) FetchTopics(ctx context.Context, in *ListRequest, out *ListResponse) error {
+	return h.BlogsHandler.FetchTopics(ctx, in, out)
 }
 
 func (h *blogsHandler) CreateTopic(ctx context.Context, in *Topic, out *Response) error {

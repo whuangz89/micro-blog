@@ -17,7 +17,7 @@ func main() {
 
 	srv.Init()
 
-	h := handler.New(srv, srv.Client())
+	h := handler.New(srv.Client())
 	pb.RegisterBlogsHandler(srv.Server(), h)
 
 	if err := srv.Run(); err != nil {
