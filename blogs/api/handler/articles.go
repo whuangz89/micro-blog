@@ -10,7 +10,7 @@ import (
 	blogs "github.com/whuangz/micro-blog/blogs/proto"
 )
 
-func (h *handler) Fetch(ctx context.Context, req *pb.ListRequest, res *pb.ListResponse) error {
+func (h *Handler) Fetch(ctx context.Context, req *pb.ListRequest, res *pb.ListResponse) error {
 	rawArticlesRes, err := h.blogs.FetchArticles(ctx, &blogs.ListRequest{})
 	if err != nil {
 		return err
@@ -23,7 +23,7 @@ func (h *handler) Fetch(ctx context.Context, req *pb.ListRequest, res *pb.ListRe
 	return nil
 }
 
-func (h *handler) Create(ctx context.Context, req *pb.Article, res *pb.Response) error {
+func (h *Handler) Create(ctx context.Context, req *pb.Article, res *pb.Response) error {
 
 	if req.Title == "" || req.Content == "" {
 		return errors.BadRequest("", "Missing Param")
@@ -39,18 +39,18 @@ func (h *handler) Create(ctx context.Context, req *pb.Article, res *pb.Response)
 	return nil
 }
 
-func (h *handler) Delete(ctx context.Context, req *pb.Article, res *pb.Response) error {
+func (h *Handler) Delete(ctx context.Context, req *pb.Article, res *pb.Response) error {
 
 	return nil
 }
 
-func (h *handler) Update(ctx context.Context, req *pb.Article, res *pb.Response) error {
+func (h *Handler) Update(ctx context.Context, req *pb.Article, res *pb.Response) error {
 
 	return nil
 
 }
 
-func (h *handler) getTopicForArticle(a *blogs.Article) (*pb.Topic, error) {
+func (h *Handler) getTopicForArticle(a *blogs.Article) (*pb.Topic, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 150*time.Millisecond)
 	defer cancel()
 
@@ -67,7 +67,7 @@ func (h *handler) getTopicForArticle(a *blogs.Article) (*pb.Topic, error) {
 
 }
 
-func (h *handler) serializeArticle(a *blogs.Article) *pb.Article {
+func (h *Handler) serializeArticle(a *blogs.Article) *pb.Article {
 
 	res := &pb.Article{
 		Id:        a.Id,

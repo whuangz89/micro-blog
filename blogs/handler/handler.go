@@ -4,12 +4,12 @@ import (
 	"github.com/whuangz/micro-blog/blogs/repository"
 )
 
-type handler struct {
+type Handler struct {
 	repository repository.Service
 }
 
-func NewBlogHandler(repo repository.Service) *handler {
-	return &handler{
+func NewBlogHandler(repo repository.Service) *Handler {
+	return &Handler{
 		repository: repo,
 	}
 }

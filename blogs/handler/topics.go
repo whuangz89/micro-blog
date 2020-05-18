@@ -8,7 +8,7 @@ import (
 	"github.com/whuangz/micro-blog/blogs/repository"
 )
 
-func (h *handler) FetchTopics(ctx context.Context, req *pb.ListRequest, res *pb.ListResponse) error {
+func (h *Handler) FetchTopics(ctx context.Context, req *pb.ListRequest, res *pb.ListResponse) error {
 	topics, err := h.repository.FetchTopics(ctx, req)
 	if err != nil {
 		return err
@@ -21,7 +21,7 @@ func (h *handler) FetchTopics(ctx context.Context, req *pb.ListRequest, res *pb.
 	return nil
 }
 
-func (h *handler) CreateTopic(ctx context.Context, req *pb.Topic, res *pb.Response) error {
+func (h *Handler) CreateTopic(ctx context.Context, req *pb.Topic, res *pb.Response) error {
 
 	if req.Title == "" || req.Color == "" {
 		return errors.BadRequest("", "Missing Param")
@@ -36,7 +36,7 @@ func (h *handler) CreateTopic(ctx context.Context, req *pb.Topic, res *pb.Respon
 	return nil
 }
 
-func (h *handler) GetTopic(ctx context.Context, req *pb.Topic, res *pb.Response) error {
+func (h *Handler) GetTopic(ctx context.Context, req *pb.Topic, res *pb.Response) error {
 
 	if req.Id == 0 {
 		return errors.BadRequest("", "Missing Param")
@@ -51,7 +51,7 @@ func (h *handler) GetTopic(ctx context.Context, req *pb.Topic, res *pb.Response)
 	return nil
 }
 
-func (h *handler) serializeTopic(t *repository.Topic) *pb.Topic {
+func (h *Handler) serializeTopic(t *repository.Topic) *pb.Topic {
 	return &pb.Topic{
 		Id:        t.ID,
 		Title:     t.Title,

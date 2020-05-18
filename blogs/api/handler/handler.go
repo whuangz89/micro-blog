@@ -6,13 +6,13 @@ import (
 )
 
 // Handler is an object can process RPC requests
-type handler struct {
+type Handler struct {
 	blogs blogs.BlogsService
 }
 
 // New returns an instance of Handler
-func New(client client.Client) *handler {
-	return &handler{
-		blogs: blogs.NewBlogsService("micro-blog-v1-blogs:8080", client),
+func New(client client.Client) *Handler {
+	return &Handler{
+		blogs: blogs.NewBlogsService("micro-blog-v1-blogs", client),
 	}
 }

@@ -11,7 +11,7 @@ import (
 
 func main() {
 	srv := micro.NewService(
-		micro.Name("micro-blogs-api-v1-blogs"),
+		micro.Name("micro-blog-api-v1-blogs"),
 		micro.Version("latest"),
 	)
 

@@ -8,7 +8,7 @@ import (
 	"github.com/whuangz/micro-blog/blogs/repository"
 )
 
-func (h *handler) FetchArticles(ctx context.Context, req *pb.ListRequest, res *pb.ListResponse) error {
+func (h *Handler) FetchArticles(ctx context.Context, req *pb.ListRequest, res *pb.ListResponse) error {
 	articles, err := h.repository.FetchArticles()
 	if err != nil {
 		return err
@@ -21,7 +21,7 @@ func (h *handler) FetchArticles(ctx context.Context, req *pb.ListRequest, res *p
 	return nil
 }
 
-func (h *handler) CreateArticle(ctx context.Context, req *pb.Article, res *pb.Response) error {
+func (h *Handler) CreateArticle(ctx context.Context, req *pb.Article, res *pb.Response) error {
 
 	if req.Title == "" || req.Content == "" {
 		return errors.BadRequest("", "Missing Param")
@@ -35,7 +35,7 @@ func (h *handler) CreateArticle(ctx context.Context, req *pb.Article, res *pb.Re
 	return nil
 }
 
-func (h *handler) DeleteArticle(ctx context.Context, req *pb.Article, res *pb.Response) error {
+func (h *Handler) DeleteArticle(ctx context.Context, req *pb.Article, res *pb.Response) error {
 
 	if req.Id == 0 {
 		return errors.BadRequest("", "Missing Article ID")
@@ -47,7 +47,7 @@ func (h *handler) DeleteArticle(ctx context.Context, req *pb.Article, res *pb.Re
 	return nil
 }
 
-func (h *handler) UpdateArticle(ctx context.Context, req *pb.Article, res *pb.Response) error {
+func (h *Handler) UpdateArticle(ctx context.Context, req *pb.Article, res *pb.Response) error {
 
 	if req.Title == "" || req.Content == "" {
 		return errors.BadRequest("", "Missing Param")
@@ -66,7 +66,7 @@ func (h *handler) UpdateArticle(ctx context.Context, req *pb.Article, res *pb.Re
 
 }
 
-func (h *handler) serializeArticle(a *repository.Article) *pb.Article {
+func (h *Handler) serializeArticle(a *repository.Article) *pb.Article {
 	return &pb.Article{
 		Id:        a.ID,
 		Title:     a.Title,

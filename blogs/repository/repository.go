@@ -25,7 +25,7 @@ type Service interface {
 }
 
 type Article struct {
-	ID       uint32 `gorm:"primary_key;type:int(11)"`
+	ID       uint32 `gorm:"AUTO_INCREMENT;primary_key;type:int(11)"`
 	Title    string `gorm:"type:varchar(225)"`
 	Slug     string `gorm:"type:varchar(225)"`
 	Content  string `gorm:"type:text"`
@@ -70,6 +70,9 @@ func (m *articleRepository) Close() error {
 }
 
 func (m *articleRepository) Migrate() {
-	m.db.Debug().AutoMigrate(&Article{})
+	m.db.Debug().AutoMigrate(
+		&Article{},
+		&Topic{},
+	)
 
 }

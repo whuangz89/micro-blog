@@ -53,7 +53,7 @@ func (m *articleRepository) fetch(query string) ([]*Article, error) {
 
 func (m *articleRepository) FetchArticles() ([]*Article, error) {
 
-	query := `SELECT id,title, slug, content, category_id, author_id, updated_at, created_at
+	query := `SELECT id,title, slug, content, topic_id, author_id, updated_at, created_at
 						FROM articles`
 
 	res, err := m.fetch(query)
@@ -65,7 +65,7 @@ func (m *articleRepository) FetchArticles() ([]*Article, error) {
 }
 
 func (m *articleRepository) CreateArticle(ctx context.Context, req *pb.Article) error {
-	query := `INSERT INTO articles(title, slug, content ,category_id ,author_id, status ,updated_at, created_at) VALUES(?,?,?,?,"drafted",NOW(),NOW())`
+	query := `INSERT INTO articles(title, slug, content ,topic_id ,author_id, status ,updated_at, created_at) VALUES(?,?,?,?,?,"drafted",NOW(),NOW())`
 	q := m.db.Exec(query, strings.TrimSpace(req.Title), slug.Make(req.Title), strings.TrimSpace(req.Content), 1, 1)
 	if errs := q.GetErrors(); len(errs) > 0 {
 		return errs[0]
