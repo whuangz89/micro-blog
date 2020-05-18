@@ -18,7 +18,7 @@ type Service interface {
 
 	FetchTopics(ctx context.Context, req *pb.ListRequest) ([]*Topic, error)
 	CreateTopic(ctx context.Context, req *pb.Topic) error
-	GetTopic(ctx context.Context, req *pb.Topic) error
+	GetTopic(ctx context.Context, req *pb.Topic) (*Topic, error)
 
 	Migrate()
 	Close() error

@@ -60,12 +60,29 @@ func (m *articleRepository) CreateTopic(ctx context.Context, req *pb.Topic) erro
 	return nil
 }
 
-func (m *articleRepository) GetTopic(ctx context.Context, req *pb.Topic) error {
-	query := `SELECTT * FROM topics WHERE id = ?`
-	q := m.db.Exec(query, req.Id)
-	if errs := q.GetErrors(); len(errs) > 0 {
-		return errs[0]
+func (m *articleRepository) GetTopic(ctx context.Context, req *pb.Topic) (*Topic, error) {
+	query := `SELECT id, title, slug, tag, color FROM topics WHERE id = ?`
+	rows, err := m.db.Raw(query, req.Id).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	t := new(Topic)
+	for rows.Next() {
+		err = rows.Scan(
+			&t.ID,
+			&t.Title,
+			&t.Slug,
+			&t.Tag,
+			&t.Color,
+		)
+
+		if err != nil {
+			logrus.Error(err)
+			return nil, err
+		}
 	}
 
-	return nil
+	return t, nil
 }

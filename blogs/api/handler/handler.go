@@ -13,6 +13,6 @@ type Handler struct {
 // New returns an instance of Handler
 func New(client client.Client) *Handler {
 	return &Handler{
-		blogs: blogs.NewBlogsService("micro-blog-v1-blogs", client),
+		blogs: blogs.NewBlogsService("go.micro.service.v1.blogs", client),
 	}
 }

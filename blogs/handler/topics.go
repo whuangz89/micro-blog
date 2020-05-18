@@ -42,23 +42,22 @@ func (h *Handler) GetTopic(ctx context.Context, req *pb.Topic, res *pb.Response)
 		return errors.BadRequest("", "Missing Param")
 	}
 
-	err := h.repository.GetTopic(ctx, req)
+	topic, err := h.repository.GetTopic(ctx, req)
 
 	if err != nil {
 		return err
 	}
+	res.Topic = h.serializeTopic(topic)
 
 	return nil
 }
 
 func (h *Handler) serializeTopic(t *repository.Topic) *pb.Topic {
 	return &pb.Topic{
-		Id:        t.ID,
-		Title:     t.Title,
-		Slug:      t.Slug,
-		Tag:       t.Tag,
-		Color:     t.Color,
-		CreatedAt: t.CreatedAt.Unix(),
-		UpdatedAt: t.UpdatedAt.Unix(),
+		Id:    t.ID,
+		Title: t.Title,
+		Slug:  t.Slug,
+		Tag:   t.Tag,
+		Color: t.Color,
 	}
 }
