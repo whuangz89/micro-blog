@@ -11,7 +11,7 @@ import (
 )
 
 type Service interface {
-	FetchArticles() ([]*Article, error)
+	FetchArticles(req *pb.ListRequest) ([]*pb.Article, error)
 	CreateArticle(ctx context.Context, req *pb.Article) error
 	DeleteArticle(ctx context.Context, req *pb.Article) error
 	UpdateArticle(ctx context.Context, req *pb.Article) error
@@ -25,13 +25,14 @@ type Service interface {
 }
 
 type Article struct {
-	ID       uint32 `gorm:"AUTO_INCREMENT;primary_key;type:int(11)"`
-	Title    string `gorm:"type:varchar(225)"`
-	Slug     string `gorm:"type:varchar(225)"`
-	Content  string `gorm:"type:text"`
-	AuthorID uint32 `grom:"type:int(11)`
-	TopicID  uint32 `grom:"type:int(11)`
-	Status   string `gorm:"type:varchar(225)"`
+	ID          uint32 `gorm:"AUTO_INCREMENT;primary_key;type:int(11)"`
+	Title       string `gorm:"type:varchar(225)"`
+	Slug        string `gorm:"type:varchar(225)"`
+	Content     string `gorm:"type:text"`
+	AuthorID    uint32 `gorm:"type:int(11)"`
+	TopicID     uint32 `gorm:"type:int(11)"`
+	IsPublished bool
+	PublishedAt time.Time
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -47,6 +48,13 @@ type Topic struct {
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	DeletedAt *time.Time
+}
+
+type Author struct {
+	ID   uint32 `gorm:"primary_key;type:int(11)"`
+	Name string `gorm:"type:varchar(225)"`
+
 	DeletedAt *time.Time
 }
 
@@ -73,6 +81,7 @@ func (m *articleRepository) Migrate() {
 	m.db.Debug().AutoMigrate(
 		&Article{},
 		&Topic{},
+		&Author{},
 	)
 
 }

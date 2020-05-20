@@ -1,18 +1,15 @@
 package handler
 
 import (
-	"github.com/micro/go-micro/v2/client"
-	blogs "github.com/whuangz/micro-blog/blogs/proto"
+	"github.com/whuangz/micro-blog/blogs/repository"
 )
 
-// Handler is an object can process RPC requests
 type Handler struct {
-	blogs blogs.BlogsService
+	repository repository.Service
 }
 
-// New returns an instance of Handler
-func New(client client.Client) *Handler {
+func NewBlogHandler(repo repository.Service) *Handler {
 	return &Handler{
-		blogs: blogs.NewBlogsService("go.micro.service.v1.blogs", client),
+		repository: repo,
 	}
 }
