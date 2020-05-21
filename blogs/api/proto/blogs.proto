@@ -26,10 +26,12 @@ message Article {
     Author author = 5;
     Topic topic = 6;
     bool is_published = 7;
-    int64 published_at = 8;
+    string published_at = 8;
     int64 created_at = 9;
     int64 updated_at = 10;
     int64 deleted_at = 11;
+
+    int32 topic_id = 12;
 }
 
 message Topic {

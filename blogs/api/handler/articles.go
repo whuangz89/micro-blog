@@ -19,7 +19,7 @@ func (h *Handler) FetchArticles(ctx context.Context, req *pb.ListRequest, res *p
 
 func (h *Handler) CreateArticle(ctx context.Context, req *pb.Article, res *pb.Response) error {
 
-	if req.Title == "" || req.Content == "" {
+	if req.Title == "" || req.Content == "" || req.TopicId == 0 {
 		return errors.BadRequest("", "Missing Param")
 	}
 

@@ -90,8 +90,14 @@ func (m *articleRepository) FetchArticles(req *pb.ListRequest) ([]*pb.Article, e
 }
 
 func (m *articleRepository) CreateArticle(ctx context.Context, req *pb.Article) error {
-	query := `INSERT INTO articles(title, slug, content ,topic_id ,author_id, status ,updated_at, created_at) VALUES(?,?,?,?,?,"drafted",NOW(),NOW())`
-	q := m.db.Exec(query, strings.TrimSpace(req.Title), slug.Make(req.Title), strings.TrimSpace(req.Content), 1, 1)
+	query := `
+			INSERT INTO articles(title, slug, content ,topic_id ,author_id, is_published, published_at ,updated_at, created_at) 
+			VALUES(?,?,?,?,?,?,?,NOW(),NOW())
+			`
+
+	q := m.db.Exec(query,
+		strings.TrimSpace(req.Title), slug.Make(req.Title), strings.TrimSpace(req.Content), req.TopicId, 1, req.PublishedAt != "", req.PublishedAt)
+
 	if errs := q.GetErrors(); len(errs) > 0 {
 		return errs[0]
 	}
