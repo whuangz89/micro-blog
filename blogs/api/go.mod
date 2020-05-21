@@ -12,5 +12,7 @@ require (
 	github.com/micro/go-micro/v2 v2.4.0
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/viper v1.6.2
-	github.com/whuangz/micro-blog/blog v0.0.0-20200416131239-8c0e5ceaf357
+	github.com/whuangz/micro-blog/helpers/sql v0.0.0-00010101000000-000000000000
 )
+
+replace github.com/whuangz/micro-blog/helpers/sql => ../../helpers/sql

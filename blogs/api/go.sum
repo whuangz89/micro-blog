@@ -415,6 +415,7 @@ github.com/valyala/fasttemplate v1.0.1/go.mod h1:UQGH1tvbgY+Nz5t2n7tXsz52dQxojPU
 github.com/vultr/govultr v0.1.4/go.mod h1:9H008Uxr/C4vFNGLqKx232C206GL0PBHzOP0809bGNA=
 github.com/whuangz/micro-blog v0.0.0-20200410121257-125ab4a61010 h1:DB/uv9IMyNAmV72iXOFShfzqYuRqGi0TctvCqcwcT1Y=
 github.com/whuangz/micro-blog v0.0.0-20200416131239-8c0e5ceaf357 h1:vtkxrtD52TA3sAwGoHkwLK3JFn6cHg19FrLo4tiJFVw=
+github.com/whuangz/micro-blog v0.0.0-20200520142603-b92a319ab6d4 h1:RYcoCEyaQxuk5f0CWdgdc+WrnCnXh16k7m/b1LSbDFU=
 github.com/whuangz/micro-blog/article v0.0.0-20200410121257-125ab4a61010 h1:6K1I752Kk6KWGxhmb8DawtX04Uw0ex3ik2P7WYTo03I=
 github.com/whuangz/micro-blog/article v0.0.0-20200410121257-125ab4a61010/go.mod h1:7CV0Mmo5NXf/p7qZtv4Bt82Uy/ftf1nRZHKReJMZA/U=
 github.com/whuangz/micro-blog/blog v0.0.0-20200416131239-8c0e5ceaf357 h1:KxJHD9YT28QQ96AGdGil6VaecfNKdqHi7aQUSeelx4U=

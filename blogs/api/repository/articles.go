@@ -9,6 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	pb "github.com/whuangz/micro-blog/blogs/proto"
+	"github.com/whuangz/micro-blog/helpers/sql"
 )
 
 func (m *articleRepository) fetch(query string) ([]*pb.Article, error) {
@@ -96,7 +97,7 @@ func (m *articleRepository) CreateArticle(ctx context.Context, req *pb.Article) 
 			`
 
 	q := m.db.Exec(query,
-		strings.TrimSpace(req.Title), slug.Make(req.Title), strings.TrimSpace(req.Content), req.TopicId, 1, req.PublishedAt != "", req.PublishedAt)
+		strings.TrimSpace(req.Title), slug.Make(req.Title), strings.TrimSpace(req.Content), req.TopicId, 1, req.PublishedAt != "", sql.NewNullString(req.PublishedAt))
 
 	if errs := q.GetErrors(); len(errs) > 0 {
 		return errs[0]
