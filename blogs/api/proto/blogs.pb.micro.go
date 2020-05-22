@@ -35,6 +35,7 @@ var _ server.Option
 
 type BlogsService interface {
 	FetchArticles(ctx context.Context, in *ListRequest, opts ...client.CallOption) (*ListResponse, error)
+	GetArticle(ctx context.Context, in *Article, opts ...client.CallOption) (*Response, error)
 	CreateArticle(ctx context.Context, in *Article, opts ...client.CallOption) (*Response, error)
 	DeleteArticle(ctx context.Context, in *Article, opts ...client.CallOption) (*Response, error)
 	UpdateArticle(ctx context.Context, in *Article, opts ...client.CallOption) (*Response, error)
@@ -58,6 +59,16 @@ func NewBlogsService(name string, c client.Client) BlogsService {
 func (c *blogsService) FetchArticles(ctx context.Context, in *ListRequest, opts ...client.CallOption) (*ListResponse, error) {
 	req := c.c.NewRequest(c.name, "Blogs.FetchArticles", in)
 	out := new(ListResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blogsService) GetArticle(ctx context.Context, in *Article, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "Blogs.GetArticle", in)
+	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -129,6 +140,7 @@ func (c *blogsService) GetTopic(ctx context.Context, in *Topic, opts ...client.C
 
 type BlogsHandler interface {
 	FetchArticles(context.Context, *ListRequest, *ListResponse) error
+	GetArticle(context.Context, *Article, *Response) error
 	CreateArticle(context.Context, *Article, *Response) error
 	DeleteArticle(context.Context, *Article, *Response) error
 	UpdateArticle(context.Context, *Article, *Response) error
@@ -140,6 +152,7 @@ type BlogsHandler interface {
 func RegisterBlogsHandler(s server.Server, hdlr BlogsHandler, opts ...server.HandlerOption) error {
 	type blogs interface {
 		FetchArticles(ctx context.Context, in *ListRequest, out *ListResponse) error
+		GetArticle(ctx context.Context, in *Article, out *Response) error
 		CreateArticle(ctx context.Context, in *Article, out *Response) error
 		DeleteArticle(ctx context.Context, in *Article, out *Response) error
 		UpdateArticle(ctx context.Context, in *Article, out *Response) error
@@ -160,6 +173,10 @@ type blogsHandler struct {
 
 func (h *blogsHandler) FetchArticles(ctx context.Context, in *ListRequest, out *ListResponse) error {
 	return h.BlogsHandler.FetchArticles(ctx, in, out)
+}
+
+func (h *blogsHandler) GetArticle(ctx context.Context, in *Article, out *Response) error {
+	return h.BlogsHandler.GetArticle(ctx, in, out)
 }
 
 func (h *blogsHandler) CreateArticle(ctx context.Context, in *Article, out *Response) error {

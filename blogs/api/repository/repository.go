@@ -12,6 +12,7 @@ import (
 
 type Service interface {
 	FetchArticles(req *pb.ListRequest) ([]*pb.Article, error)
+	GetArticle(req *pb.Article) (*pb.Article, error)
 	CreateArticle(ctx context.Context, req *pb.Article) error
 	DeleteArticle(ctx context.Context, req *pb.Article) error
 	UpdateArticle(ctx context.Context, req *pb.Article) error

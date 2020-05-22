@@ -12,9 +12,9 @@ import (
 	"github.com/whuangz/micro-blog/helpers/sql"
 )
 
-func (m *articleRepository) fetch(query string) ([]*pb.Article, error) {
+func (m *articleRepository) fetch(query string, args ...interface{}) ([]*pb.Article, error) {
 
-	rows, err := m.db.Raw(query).Rows()
+	rows, err := m.db.Raw(query, args).Rows()
 	if err != nil {
 		logrus.Error(err)
 		return nil, err
@@ -88,6 +88,36 @@ func (m *articleRepository) FetchArticles(req *pb.ListRequest) ([]*pb.Article, e
 	}
 
 	return res, nil
+}
+
+func (m *articleRepository) GetArticle(req *pb.Article) (*pb.Article, error) {
+	var whereQuery = `
+			WHERE a.id = ? AND
+			a.deleted_at is NULL AND is_published = 1
+			`
+
+	query := `
+			SELECT a.id, a.title, a.slug, a.content, 
+			a.topic_id , t.title as topic_title, t.slug as topic_slug, t.color as color_code,
+			a.author_id, au.name as author_name,
+			a.is_published, a.updated_at, a.created_at
+			FROM articles a
+			LEFT JOIN authors au ON au.id = a.author_id AND au.deleted_at is NULL
+			LEFT JOIN topics t ON t.id = a.topic_id AND t.deleted_at is NULL
+			`
+	query += whereQuery
+
+	res, err := m.fetch(query, req.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(res) > 0 {
+		return res[0], nil
+	} else {
+		return nil, errors.NotFound("", "Article not Found")
+	}
+
 }
 
 func (m *articleRepository) CreateArticle(ctx context.Context, req *pb.Article) error {

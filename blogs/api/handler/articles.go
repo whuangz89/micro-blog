@@ -17,6 +17,21 @@ func (h *Handler) FetchArticles(ctx context.Context, req *pb.ListRequest, res *p
 	return nil
 }
 
+func (h *Handler) GetArticle(ctx context.Context, req *pb.Article, res *pb.Response) error {
+
+	if req.Id == 0 {
+		return errors.BadRequest("", "Missing ID")
+	}
+
+	article, err := h.repository.GetArticle(req)
+	if err != nil {
+		return err
+	}
+	res.Article = article
+	return nil
+
+}
+
 func (h *Handler) CreateArticle(ctx context.Context, req *pb.Article, res *pb.Response) error {
 
 	if req.Title == "" || req.Content == "" || req.TopicId == 0 {
